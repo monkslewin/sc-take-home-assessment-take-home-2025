@@ -23,29 +23,32 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 	return res
 }
 
-func GetParentPath(folders []Folder) string {
-	parent_path := 
+func GetParentPath(folders []Folder, name string) string {
+	var parent_path string
+    for _, folder := range folders {
+        if folder.Name == name {
+            parent_path = folder.Paths
+            break
+        }
+    }
+
+	return parent_path
+	
 }
 
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
     folders_by_org := f.GetFoldersByOrgID(orgID)
     child_folders := []Folder{}
 
-    var parentPath string
-    for _, folder := range folders_by_org {
-        if folder.Name == name {
-            parentPath = folder.Paths
-            break
-        }
-    }
+    parent_path := GetParentPath(folders_by_org, name)
 
-    if parentPath == "" {
+    if parent_path == "" {
         return child_folders
     }
 
 
     for _, folder := range folders_by_org {
-        if strings.HasPrefix(folder.Paths, parentPath+".") {
+        if strings.HasPrefix(folder.Paths, parent_path+".") {
             child_folders = append(child_folders, folder)
         }
     }
