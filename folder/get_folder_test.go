@@ -110,13 +110,13 @@ func Test_folder_GetFoldersByOrgID(t *testing.T) {
 }
 
 func Test_folder_GetAllChildFolders(t *testing.T) {
-	t.Parallel() // // Handles tests simultaneously 
+	t.Parallel() // Handles tests simultaneously
 	tests := [...]struct {
-		name    string
-		orgID   uuid.UUID
-		folders []folder.Folder
-		parentFolder  string
-		want    []folder.Folder
+		name         string
+		orgID        uuid.UUID
+		folders      []folder.Folder
+		parentFolder string
+		want         []folder.Folder
 	}{
 		// Test 1
 		{ 
@@ -124,7 +124,7 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 			orgID: uuid.Must(uuid.NewV4()), // Random orgID
 			folders: []folder.Folder{},     // No folders present
 			parentFolder: "parent",
-			want:    []folder.Folder{},
+			want:    []folder.Folder{},  // Expecting an empty list
 		},
 		// Test 2
 		{ 
@@ -149,10 +149,10 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 			folders: []folder.Folder{
 				{Name: "parent", OrgId: uuid.FromStringOrNil(folder.DefaultOrgID), Paths: "parent"},
 				{Name: "child1", OrgId: uuid.FromStringOrNil(folder.DefaultOrgID), Paths: "random_folder.child1"}, // Not child folders of the parent folder
-				{Name: "child1", OrgId: uuid.FromStringOrNil(folder.DefaultOrgID), Paths: "random_folder.child1.child2"},
+				{Name: "child2", OrgId: uuid.FromStringOrNil(folder.DefaultOrgID), Paths: "random_folder.child1.child2"},
 			},
 			parentFolder: "parent",
-			want: []folder.Folder{},
+			want: []folder.Folder{},  // Expecting an empty list
 		},
 		// Test 4
 		{
@@ -165,7 +165,7 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 				{Name: "child3", OrgId: uuid.FromStringOrNil(folder.DefaultOrgID), Paths: "child1.child2.child3"}, // Should not include this one
 			},
 			parentFolder: "parent",
-			want: []folder.Folder{},
+			want: []folder.Folder{},  // Expecting an empty list
 		},
 		// Test 5
 		{
@@ -189,7 +189,11 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) { // t.Run creates subsets of tests
 			f := folder.NewDriver(tt.folders)
 			got := f.GetAllChildFolders(tt.orgID, tt.parentFolder)
+
+			// Validate the returned folders
 			assert.Equal(t, tt.want, got)
 		})
 	}
 }
+
+

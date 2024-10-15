@@ -3,7 +3,9 @@ package folder
 import "github.com/gofrs/uuid"
 
 import (
-	"strings"
+	"strings";
+    "fmt"
+
   )
 
   // Assumption: When returning all child folders, this includes all folders at a lower example
@@ -43,6 +45,10 @@ func GetParentPath(folders []Folder, name string) string {
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
     folders_by_org := f.GetFoldersByOrgID(orgID)
     child_folders := []Folder{}
+
+    if len(folders_by_org) == 0 {
+        fmt.Println("")
+    } 
 
     parent_path := GetParentPath(folders_by_org, name)
 
