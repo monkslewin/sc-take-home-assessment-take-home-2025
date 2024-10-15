@@ -6,6 +6,10 @@ import (
 	"strings"
   )
 
+  // Assumption: When returning all child folders, this includes all folders at a lower example
+  // For example, if we have the path parent.child1.child2, child2 is considered a child of parent
+  // and this path will be returned 
+
 func GetAllFolders() []Folder {
 	return GetSampleData()
 }
